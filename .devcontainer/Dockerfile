@@ -9,6 +9,3 @@ RUN apt-get update && apt-get install -y \
 
 # Set the working directory
 WORKDIR /workspace
-
-# Switch to non-root user
-USER vscode
