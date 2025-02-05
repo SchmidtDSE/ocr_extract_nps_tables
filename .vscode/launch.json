@@ -6,7 +6,7 @@
       "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "module": "extract_tables_from_pdf",
+      "module": "src.extract_tables_from_pdf",
       "justMyCode": false,
       "pythonPath": "${cwd}/.pixi/envs/default/bin/python",
       "args": ["--pdf", "Appendix_A_JOTR_Vegetation_Descriptions_2012.pdf", "--pages", "12,16"],
