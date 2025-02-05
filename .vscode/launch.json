@@ -6,7 +6,7 @@
       "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "module": "path.to.python.module",
+      "module": "extract_tables_from_pdf",
       "justMyCode": false,
       "pythonPath": "${cwd}/.pixi/envs/default/bin/python",
       "args": ["--interactive"],
