@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run as Module",
+      "type": "debugpy",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "module": "path.to.python.module",
+      "justMyCode": false,
+      "pythonPath": "${cwd}/.pixi/envs/default/bin/python",
+      "args": ["--interactive"],
+      "envFile": "${workspaceFolder}/.devcontainer/.env"
+    }
+  ]
+}
