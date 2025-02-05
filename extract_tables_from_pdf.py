@@ -38,16 +38,16 @@ def extract_tables_from_pdf(pdf_path, pages):
                 # Stop if we hit an appendix footer (e.g., "A - 6")
                 if re.match(r'^[A-Z] - \d+$', text):
                     break
-                
+
+                # Skip the "Stand Table" header and other non-data lines
+                if text in ['Stand Table', 'Lifeform Species Name Con Avg Min Max D Ch Ab Oft', 'January 2012'] or 'January' in text:
+                    continue
+
                 # Check if this is a classification line
                 if text in ['Tree', 'Shrub', 'Herb', 'Nonvascular']:
                     current_class = text
                     continue
-                
-                # Skip the "Stand Table" header and other non-data lines
-                if text in ['Stand Table', 'Species Name'] or 'January' in text:
-                    continue
-                
+
                 # Try to parse the data line
                 parts = text.split()
                 if len(parts) >= 5:  # Need at least species name and 4 numbers
@@ -102,7 +102,7 @@ def clean_table(df):
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--pdf", help="Path to the PDF file", required=True)
-    argparser.add_argument("--pages", help="Comma-separated list of page numbers containing tables", required=True)
+    argparser.add_argument("--mapid_page_mapping_json", help="Mapping of MapUnitId to the page containing the stand table", required=True)
     args = argparser.parse_args()
 
     pages_with_tables = [int(page) for page in args.pages.split(',')]
