@@ -126,7 +126,8 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     pages_with_tables = [int(page) for page in args.pages.split(',')]
-    tables = extract_tables_from_pdf(pdf_path, pages_with_tables)
+
+    tables = extract_tables_from_pdf(args.pdf, pages_with_tables)
 
     for i, table in enumerate(tables):
         table = clean_table(table)
