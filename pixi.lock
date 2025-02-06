@@ -222,6 +222,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/poppler-24.12.0-hd7b24de_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/poppler-data-0.4.12-hd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/proj-9.5.1-h0054346_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/proj-data-1.20-h707e725_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/prometheus_client-0.21.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/prompt-toolkit-3.0.50-pyha770c72_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/prompt_toolkit-3.0.50-hd8ed1ab_0.conda
@@ -3085,12 +3086,20 @@ packages:
   - sqlite
   constrains:
   - proj4 ==999999999999
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 3108751
   timestamp: 1733138115896
+- conda: https://conda.anaconda.org/conda-forge/noarch/proj-data-1.20-h707e725_0.conda
+  sha256: fc977d7f6a272336336dae9b97f150eb2ca5973473f22a382507324416028b45
+  md5: 76c351a419dae69c278c896a48aedc73
+  depends:
+  - __unix
+  - proj >=7.0.0
+  license: Public domain | X/MIT | BSD-2/3/4-Clause | CC0 | CC-BY (v3.0 or later) | CC-BY-SA (v3.0 or later)
+  license_family: OTHER
+  size: 780887061
+  timestamp: 1733130177340
 - conda: https://conda.anaconda.org/conda-forge/noarch/prometheus_client-0.21.1-pyhd8ed1ab_0.conda
   sha256: bc8f00d5155deb7b47702cb8370f233935704100dbc23e30747c161d1b6cf3ab
   md5: 3e01e386307acc60b2f89af0b2e161aa

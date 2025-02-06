@@ -137,8 +137,10 @@ if __name__ == "__main__":
         help="Path to save the combined table as a CSV file",
         required=True,
     )
+
     args = argparser.parse_args()
 
+    output_csv = args.output_csv
     pages_with_tables = {
         12: ["10161"],
         16: ["15030"],
@@ -218,7 +220,7 @@ if __name__ == "__main__":
 
     if not tables.empty:
         tables = clean_table(tables)
-        tables.to_csv("combined_tables.csv", index=False)
-        print("Combined table saved to 'combined_tables.csv'")
+        tables.to_csv(output_csv, index=False)
+        print(f"Combined table saved to '{output_csv}'")
     else:
         print("No tables extracted.")

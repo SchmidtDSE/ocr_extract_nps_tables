@@ -4,8 +4,8 @@ import numpy as np
 from shapely.geometry import Point
 import fiona
 
-JOTR_VEG_GDB = "local_dev_data/input/jotrgeodata/jotrgeodata.gdb"
-COMBINED_CSV = "local_dev_data/output/combined.csv"
+JOTR_VEG_GDB = "/workspaces/ocr_extract_nps_tables/local_dev_data/input/jotrgeodata/jotrgeodata.gdb"
+COMBINED_CSV = "/workspaces/ocr_extract_nps_tables/local_dev_data/output/combined.csv"
 
 
 def create_random_points():
@@ -14,10 +14,10 @@ def create_random_points():
 
     # Read data
     layer_name = "JOTR_VegPolys"
-    polygons = gpd.read_file(f"FileGDB:{JOTR_VEG_GDB}", layer=layer_name)
+    polygons = gpd.read_file(JOTR_VEG_GDB, layer=layer_name)
 
     # Read CSV with attributes
-    attributes_df = pd.read_csv()
+    attributes_df = pd.read_csv(COMBINED_CSV)
 
     # Merge polygons with attributes based on MapUnitID
     merged_data = polygons.merge(attributes_df, on="MapUnit_ID", how="left")
