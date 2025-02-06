@@ -19,7 +19,8 @@
         "github.vscode-github-actions",
         "ms-azuretools.vscode-docker",
         "charliermarsh.ruff",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "ms-python.flake8"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",

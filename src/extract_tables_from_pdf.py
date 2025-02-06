@@ -4,6 +4,7 @@ import numpy as np
 import re
 import argparse
 import json
+import os
 
 def extract_tables_from_pdf(pdf_path, table_mapping):
     """
@@ -11,10 +12,10 @@ def extract_tables_from_pdf(pdf_path, table_mapping):
     
     Args:
         pdf_path (str): Path to the PDF file
-        pages (list): List of page numbers (1-based) containing tables
+        table_mapping (dict): Mapping of page numbers to list of MapUnitIds
     
     Returns:
-        list: List of pandas DataFrames containing species data
+        pd.DataFrame: Combined DataFrame containing all extracted tables
     """
     tables = []
     
@@ -88,7 +89,13 @@ def extract_tables_from_pdf(pdf_path, table_mapping):
                 current_data = []  # Reset for next page
             print(f"Finished mapUnitId: {mapunit_id}")
 
-    return tables
+    # Concatenate all DataFrames into one
+    if tables:
+        combined_df = pd.concat(tables, ignore_index=True)
+    else:
+        combined_df = pd.DataFrame()
+
+    return combined_df
 
 def clean_table(df):
     """
@@ -108,9 +115,8 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--pdf", help="Path to the PDF file", required=True)
     argparser.add_argument("--table_mapping_json", help="Mapping of MapUnitId to the page containing the stand table", required=True)
+    argparser.add_argument("--output_csv", help="Path to save the combined table as a CSV file", required=True)
     args = argparser.parse_args()
-
-    # pages_with_tables = json.loads(args.table_mapping_json)
 
     pages_with_tables = {
         12: ["10161"],
@@ -158,8 +164,8 @@ if __name__ == "__main__":
         156: ["27057"],
         159: ["27056"],
         161: ["27059"],
-        164: ["15010", "15013"]
-        168, ["28203", "28200"],
+        164: ["15010", "15013"],
+        168: ["28203", "28200"],
         170: ["28171"],
         174: ["16010", "16016"],
         177: ["16015"],
@@ -190,10 +196,9 @@ if __name__ == "__main__":
 
     tables = extract_tables_from_pdf(args.pdf, pages_with_tables)
 
-    for i, table in enumerate(tables):
-        table = clean_table(table)
-        print(f"\nTable {i+1}:")
-        print(table)
-        
-        # Optionally save to CSV
-        table.to_csv(f'table_{i+1}.csv', index=False)
+    if not tables.empty:
+        tables = clean_table(tables)
+        tables.to_csv('combined_tables.csv', index=False)
+        print("Combined table saved to 'combined_tables.csv'")
+    else:
+        print("No tables extracted.")
