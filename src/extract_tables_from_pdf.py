@@ -6,47 +6,56 @@ import argparse
 import json
 import os
 
+
 def extract_tables_from_pdf(pdf_path, table_mapping):
     """
     Extract tables from specified pages of a PDF file using pdfplumber's line extraction.
-    
+
     Args:
         pdf_path (str): Path to the PDF file
         table_mapping (dict): Mapping of page numbers to list of MapUnitIds
-    
+
     Returns:
         pd.DataFrame: Combined DataFrame containing all extracted tables
     """
     tables = []
-    
+
     with pdfplumber.open(pdf_path) as pdf:
         current_data = []
         current_class = None
-        
+
         for page_num, mapunit_ids in table_mapping.items():
             # pdfplumber uses 0-based indexing
             page = pdf.pages[page_num - 1]
-            
+
             # Get all lines from the page
             lines = page.extract_text_lines()
-            
+
             for line in lines:
-                text = line['text'].strip()
-                
+                text = line["text"].strip()
+
                 # Skip empty lines
                 if not text:
                     continue
-                    
+
                 # Stop if we hit an appendix footer (e.g., "A - 6")
-                if re.match(r'^[A-Z] - \d+$', text):
+                if re.match(r"^[A-Z] - \d+$", text):
                     break
 
                 # Skip the "Stand Table" header and other non-data lines
-                if text in ['Stand Table', 'Lifeform Species Name Con Avg Min Max D Ch Ab Oft', 'January 2012'] or 'January' in text:
+                if (
+                    text
+                    in [
+                        "Stand Table",
+                        "Lifeform Species Name Con Avg Min Max D Ch Ab Oft",
+                        "January 2012",
+                    ]
+                    or "January" in text
+                ):
                     continue
 
                 # Check if this is a classification line
-                if text in ['Tree', 'Shrub', 'Herb', 'Nonvascular']:
+                if text in ["Tree", "Shrub", "Herb", "Nonvascular"]:
                     current_class = text
                     continue
 
@@ -56,32 +65,34 @@ def extract_tables_from_pdf(pdf_path, table_mapping):
                     try:
                         # Find where the numbers start
                         for i, part in enumerate(parts):
-                            if re.match(r'^\d+(?:\.\d+)?$', part):
+                            if re.match(r"^\d+(?:\.\d+)?$", part):
                                 numeric_start = i
                                 break
                         else:
                             continue
-                        
-                        species_name = ' '.join(parts[:numeric_start])
-                        numbers = parts[numeric_start:numeric_start+4]
-                        
+
+                        species_name = " ".join(parts[:numeric_start])
+                        numbers = parts[numeric_start : numeric_start + 4]
+
                         # Convert numbers to float
                         con, avg, min_val, max_val = map(float, numbers)
-                        
+
                         for mapunit_id in mapunit_ids:
-                            current_data.append({
-                                'MapUnitId': mapunit_id,
-                                'Species': species_name,
-                                'Class': current_class,
-                                'Con': con,
-                                'Avg': avg,
-                                'Min': min_val,
-                                'Max': max_val
-                            })
+                            current_data.append(
+                                {
+                                    "MapUnitId": mapunit_id,
+                                    "Species": species_name,
+                                    "Class": current_class,
+                                    "Con": con,
+                                    "Avg": avg,
+                                    "Min": min_val,
+                                    "Max": max_val,
+                                }
+                            )
                     except (ValueError, IndexError):
                         print(f"Failed to parse line in mapunit {mapunit_id}: {text}")
                         continue
-            
+
             # Create DataFrame for this page if we have data
             if current_data:
                 df = pd.DataFrame(current_data)
@@ -97,25 +108,35 @@ def extract_tables_from_pdf(pdf_path, table_mapping):
 
     return combined_df
 
+
 def clean_table(df):
     """
     Clean the extracted table by fixing data types and handling missing values.
     """
     # Convert numeric columns to float
-    numeric_cols = ['Con', 'Avg', 'Min', 'Max']
+    numeric_cols = ["Con", "Avg", "Min", "Max"]
     for col in numeric_cols:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
-    
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+
     # Sort by Class and Species
-    df = df.sort_values(['Class', 'Species'])
-    
+    df = df.sort_values(["Class", "Species"])
+
     return df
+
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--pdf", help="Path to the PDF file", required=True)
-    argparser.add_argument("--table_mapping_json", help="Mapping of MapUnitId to the page containing the stand table", required=True)
-    argparser.add_argument("--output_csv", help="Path to save the combined table as a CSV file", required=True)
+    argparser.add_argument(
+        "--table_mapping_json",
+        help="Mapping of MapUnitId to the page containing the stand table",
+        required=True,
+    )
+    argparser.add_argument(
+        "--output_csv",
+        help="Path to save the combined table as a CSV file",
+        required=True,
+    )
     args = argparser.parse_args()
 
     pages_with_tables = {
@@ -146,7 +167,7 @@ if __name__ == "__main__":
         95: ["29030", "29032"],
         98: ["29033"],
         101: ["29034"],
-        106: ["28301", "28300"], 
+        106: ["28301", "28300"],
         109: ["28110"],
         111: ["28112"],
         115: ["29050"],
@@ -190,15 +211,14 @@ if __name__ == "__main__":
         235: ["28080", "28083"],
         237: ["36020"],
         243: ["28070", "28400", "90100"],
-        245: ["60020"]
+        245: ["60020"],
     }
-
 
     tables = extract_tables_from_pdf(args.pdf, pages_with_tables)
 
     if not tables.empty:
         tables = clean_table(tables)
-        tables.to_csv('combined_tables.csv', index=False)
+        tables.to_csv("combined_tables.csv", index=False)
         print("Combined table saved to 'combined_tables.csv'")
     else:
         print("No tables extracted.")

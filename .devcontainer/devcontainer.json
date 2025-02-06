@@ -20,7 +20,8 @@
         "ms-azuretools.vscode-docker",
         "charliermarsh.ruff",
         "esbenp.prettier-vscode",
-        "ms-python.flake8"
+        "ms-python.flake8",
+        "ms-toolsai.jupyter"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
