@@ -80,7 +80,7 @@ def extract_tables_from_pdf(pdf_path, table_mapping):
                         for mapunit_id in mapunit_ids:
                             current_data.append(
                                 {
-                                    "MapUnitId": mapunit_id,
+                                    "MapUnit_ID": mapunit_id,  # Case to match jotr_geodatabase
                                     "Species": species_name,
                                     "Class": current_class,
                                     "Con": con,
