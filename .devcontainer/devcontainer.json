@@ -5,9 +5,7 @@
     "context": "../"
   },
   "mounts": [
-    "source=${localWorkspaceFolderBasename}-pixi,target=${containerWorkspaceFolder}/.pixi,type=volume", // pixi cache
-    // "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached", // ssh key for git
-    // "source=${localEnv:HOME}/local_dev_data/${localWorkspaceFolderBasename},target=${containerWorkspaceFolder}/local_dev_data,type=bind,consistency=cached" // local data
+    "source=${localWorkspaceFolderBasename}-pixi,target=${containerWorkspaceFolder}/.pixi,type=volume" // pixi cache
   ],
   "postCreateCommand": ".devcontainer/scripts/run_post_create.sh",
   "customizations": {

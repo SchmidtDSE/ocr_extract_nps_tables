@@ -4,7 +4,7 @@
 if [ ! -d "/workspaces/ocr_extract_nps_tables/data/input" ]; then
 
     # Create input data directory
-    mkdir /workspaces/ocr_extract_nps_tables/data/input
+    mkdir -p /workspaces/ocr_extract_nps_tables/data/input
 
     # Download the data, shared as public links from Google Cloud Storage Bucket
     echo "Downloading input data..."
