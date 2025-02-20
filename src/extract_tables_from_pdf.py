@@ -135,14 +135,17 @@ if __name__ == "__main__":
         required=True,
     )
     argparser.add_argument(
-        "--output_csv",
-        help="Path to save the combined table as a CSV file",
+        "--output_csv_dir",
+        help="Path to dir to save the combined table as a CSV file",
         required=True,
     )
 
     args = argparser.parse_args()
     table_mapping_json = args.table_mapping_json
-    output_csv = args.output_csv
+    output_csv_dir = args.output_csv_dir
+
+    demo_name = os.getenv("DEMO_NAME")
+    output_csv = os.path.join(output_csv_dir, f"{demo_name}.csv")
 
     with open(table_mapping_json, "r") as f:
         table_mapping = json.load(f)
@@ -152,6 +155,8 @@ if __name__ == "__main__":
     if not tables.empty:
         tables = clean_table(tables)
         tables.to_csv(output_csv, index=False)
-        print(f"Combined table saved to '{output_csv}'")
+        print(
+            f"Combined table saved to '{output_csv}' (according to DEMO_NAME set in `.devcontainer/env`: {demo_name})."
+        )
     else:
         print("No tables extracted.")
