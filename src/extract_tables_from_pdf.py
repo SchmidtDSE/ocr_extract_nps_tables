@@ -142,7 +142,10 @@ if __name__ == "__main__":
 
     args = argparser.parse_args()
     table_mapping_json = args.table_mapping_json
+
     output_csv_dir = args.output_csv_dir
+    if not os.path.exists(output_csv_dir):
+        os.makedirs(output_csv_dir)
 
     demo_name = os.getenv("DEMO_NAME")
     output_csv = os.path.join(output_csv_dir, f"{demo_name}.csv")
